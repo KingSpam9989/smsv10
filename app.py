@@ -1917,10 +1917,14 @@ def run(phone, i):
 
     # ✅ Đánh dấu đã xong
     spam_tracker[phone]["done"] = True
-    return f"Spam thành công lần: {i}"
+    remove_phone_after_delay(phone)
 
 
-
+def remove_phone_after_delay(phone, delay=300):  # 300 giây = 5 phút
+    def remove():
+        spam_tracker.pop(phone, None)
+        print(f"[INFO] Đã xóa trạng thái spam của số: {phone}")
+    threading.Timer(delay, remove).start()
 @app.route('/spam', methods=['POST', 'GET'])
 def spam():
     if request.method == 'GET':
